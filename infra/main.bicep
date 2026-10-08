@@ -25,6 +25,15 @@ param graphClientId string = ''
 @secure()
 param graphClientSecret string = ''
 
+@description('Optional: Microsoft Entra admin login for the SQL server. Leave empty to skip.')
+param sqlAadAdminLogin string = ''
+
+@description('Optional: Microsoft Entra object ID for the SQL AAD admin. Leave empty to skip.')
+param sqlAadAdminObjectId string = ''
+
+@description('Optional: additional IP ranges allowed through the SQL server firewall (e.g. office/VPN egress). Each item: {name, startIp, endIp}.')
+param sqlAllowedClientIpRanges array = []
+
 var prefix = 'ltbla'
 var uniqueSuffix = uniqueString(resourceGroup().id, environment)
 var resourcePrefix = '${prefix}-${environment}'
@@ -50,6 +59,9 @@ module sql 'modules/sql.bicep' = {
     databaseName: 'ltb-lawtoolanista'
     adminLogin: sqlAdminLogin
     adminPassword: sqlAdminPassword
+    aadAdminLogin: sqlAadAdminLogin
+    aadAdminObjectId: sqlAadAdminObjectId
+    allowedClientIpRanges: sqlAllowedClientIpRanges
   }
 }
 

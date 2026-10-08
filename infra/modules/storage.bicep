@@ -24,6 +24,14 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2023-01-01' = {
     minimumTlsVersion: 'TLS1_2'
     allowBlobPublicAccess: false
     supportsHttpsTrafficOnly: true
+    // SOC2 note (2026-10-08): defaultAction is intentionally left 'Allow'.
+    // This account is AzureWebJobsStorage for a Function App on a Consumption
+    // (Y1) plan. Consumption plans can't use VNet Integration/Private Endpoint
+    // to reach the Functions host's own storage account, so setting
+    // defaultAction to 'Deny' here would break the Function App outright
+    // (confirmed against an equivalent account in production, see SOC2 Risk
+    // Register R-014/R-015). Locking this down requires first moving the
+    // Function App to a Premium (Elastic Premium) plan.
     networkAcls: {
       bypass: 'AzureServices'
       defaultAction: 'Allow'

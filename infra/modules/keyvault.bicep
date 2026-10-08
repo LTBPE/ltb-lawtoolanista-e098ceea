@@ -33,9 +33,15 @@ resource keyVault 'Microsoft.KeyVault/vaults@2023-07-01' = {
     softDeleteRetentionInDays: 7
     enabledForTemplateDeployment: true
     publicNetworkAccess: 'Enabled'
+    // SOC2 hardening (2026-10-08): defaultAction changed from 'Allow' to 'Deny'.
+    // Safe because this Key Vault is only read via App Service "Key Vault reference"
+    // app settings (@Microsoft.KeyVault(SecretUri=...)) in functionapp.bicep, which
+    // Azure resolves platform-side and is covered by the AzureServices bypass. If a
+    // future change has app code call the Key Vault SDK directly at runtime instead
+    // of via app-setting references, this will need a Private Endpoint or VNet rule.
     networkAcls: {
       bypass: 'AzureServices'
-      defaultAction: 'Allow'
+      defaultAction: 'Deny'
     }
   }
 }
