@@ -64,9 +64,7 @@ def is_meaningful_diff(diff: str, min_lines: int = 3) -> bool:
         return False
     changed = 0
     for line in diff.splitlines():
-        if line.startswith("+") and not line.startswith("+++"):
-            changed += 1
-        elif line.startswith("-") and not line.startswith("---"):
+        if line.startswith("+") and not line.startswith("+++") or line.startswith("-") and not line.startswith("---"):
             changed += 1
         if changed >= min_lines:
             return True

@@ -5,10 +5,8 @@ Page crawler using HTTPX (primary) with Playwright fallback for JS-heavy sites.
 import asyncio
 import logging
 import time
-from typing import Optional
 
 import httpx
-
 from shared.config import config
 
 logger = logging.getLogger(__name__)
@@ -24,7 +22,7 @@ _MIN_CONTENT_LENGTH = 500
 class CrawlError(Exception):
     """Raised when a page cannot be fetched."""
 
-    def __init__(self, message: str, status_code: Optional[int] = None):
+    def __init__(self, message: str, status_code: int | None = None):
         super().__init__(message)
         self.status_code = status_code
 
@@ -32,7 +30,7 @@ class CrawlError(Exception):
 async def fetch_page(
     url: str,
     js_required: bool = False,
-    css_selector: Optional[str] = None,
+    css_selector: str | None = None,
 ) -> tuple[str, int]:
     """
     Fetch a web page and return (html_content, response_time_ms).
@@ -117,7 +115,8 @@ async def _fetch_with_httpx(url: str) -> tuple[str, int]:
 
 def _ensure_playwright_browsers() -> None:
     """Install Chromium to PLAYWRIGHT_BROWSERS_PATH if not already present."""
-    import os, subprocess
+    import os
+    import subprocess
     browsers_path = os.environ.get("PLAYWRIGHT_BROWSERS_PATH", "/tmp/playwright-browsers")
     marker = os.path.join(browsers_path, ".installed")
     if not os.path.exists(marker):
@@ -130,11 +129,12 @@ def _ensure_playwright_browsers() -> None:
 
 async def _fetch_with_playwright(
     url: str,
-    css_selector: Optional[str] = None,
+    css_selector: str | None = None,
 ) -> tuple[str, int]:
     """Fetch using Playwright (headless Chromium). Returns (html, elapsed_ms)."""
     try:
-        from playwright.async_api import async_playwright, TimeoutError as PWTimeout
+        from playwright.async_api import TimeoutError as PWTimeout
+        from playwright.async_api import async_playwright
     except ImportError as exc:
         raise CrawlError(
             "Playwright is not installed. Run: playwright install chromium"

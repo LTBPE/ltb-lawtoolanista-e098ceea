@@ -1,0 +1,7 @@
+[tool.ruff.lint]
+ignore = [
+    "BLE001", # broad `except Exception` is intentional around external I/O (Azure SDK, HTTP crawling, parsing)
+    "S110",   # try/except/pass is intentional for idempotent setup (e.g. "create if not exists")
+    "TRY401", # logging.exception() already includes exception info; redundant var in the message is harmless
+    "DTZ003", # datetime.utcnow() is used consistently for naive UTC timestamps stored in Azure SQL
+]

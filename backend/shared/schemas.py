@@ -3,10 +3,8 @@ Pydantic schemas for API request/response validation.
 """
 
 from datetime import datetime
-from typing import Optional
 
 from pydantic import BaseModel, Field, field_validator
-
 
 # ---------------------------------------------------------------------------
 # Court schemas
@@ -17,12 +15,12 @@ class CourtBase(BaseModel):
     name: str = Field(..., min_length=1, max_length=255)
     url: str = Field(..., min_length=1, max_length=2048)
     court_type: str = Field(default="other")
-    state: Optional[str] = Field(default=None, max_length=2)
+    state: str | None = Field(default=None, max_length=2)
     category: str = Field(default="all")
     active: bool = True
     js_required: bool = False
-    css_selector: Optional[str] = Field(default=None, max_length=500)
-    notes: Optional[str] = None
+    css_selector: str | None = Field(default=None, max_length=500)
+    notes: str | None = None
 
     @field_validator("court_type")
     @classmethod
@@ -46,37 +44,37 @@ class CourtCreate(CourtBase):
 
 
 class CourtUpdate(BaseModel):
-    name: Optional[str] = Field(default=None, min_length=1, max_length=255)
-    url: Optional[str] = Field(default=None, min_length=1, max_length=2048)
-    court_type: Optional[str] = None
-    state: Optional[str] = Field(default=None, max_length=2)
-    category: Optional[str] = None
-    active: Optional[bool] = None
-    js_required: Optional[bool] = None
-    css_selector: Optional[str] = Field(default=None, max_length=500)
-    notes: Optional[str] = None
+    name: str | None = Field(default=None, min_length=1, max_length=255)
+    url: str | None = Field(default=None, min_length=1, max_length=2048)
+    court_type: str | None = None
+    state: str | None = Field(default=None, max_length=2)
+    category: str | None = None
+    active: bool | None = None
+    js_required: bool | None = None
+    css_selector: str | None = Field(default=None, max_length=500)
+    notes: str | None = None
 
 
 class ScanHistoryOut(BaseModel):
     id: int
     court_id: int
     scanned_at: datetime
-    content_hash: Optional[str]
+    content_hash: str | None
     status: str
-    error_message: Optional[str]
-    response_time_ms: Optional[int]
+    error_message: str | None
+    response_time_ms: int | None
 
     model_config = {"from_attributes": True}
 
 
 class CourtOut(CourtBase):
     id: int
-    last_scanned_at: Optional[datetime]
-    last_content_hash: Optional[str]
-    last_changed_at: Optional[datetime]
+    last_scanned_at: datetime | None
+    last_content_hash: str | None
+    last_changed_at: datetime | None
     consecutive_errors: int
     created_at: datetime
-    updated_at: Optional[datetime]
+    updated_at: datetime | None
     recent_scans: list[ScanHistoryOut] = []
 
     model_config = {"from_attributes": True}
@@ -96,8 +94,8 @@ class CourtListOut(BaseModel):
 
 class ChangeStatusUpdate(BaseModel):
     status: str
-    reviewed_by: Optional[str] = None
-    resolution_notes: Optional[str] = None
+    reviewed_by: str | None = None
+    resolution_notes: str | None = None
 
     @field_validator("status")
     @classmethod
@@ -114,21 +112,21 @@ class ChangeOut(BaseModel):
     detected_at: datetime
     old_snapshot_path: str
     new_snapshot_path: str
-    diff_text: Optional[str]
+    diff_text: str | None
     diff_line_count: int
-    ai_is_relevant: Optional[bool]
-    ai_summary: Optional[str]
-    ai_category: Optional[str]
-    ai_priority: Optional[str]
-    ai_action: Optional[str]
-    sharepoint_item_id: Optional[str]
+    ai_is_relevant: bool | None
+    ai_summary: str | None
+    ai_category: str | None
+    ai_priority: str | None
+    ai_action: str | None
+    sharepoint_item_id: str | None
     email_sent: bool
     status: str
-    reviewed_by: Optional[str]
-    reviewed_at: Optional[datetime]
-    resolution_notes: Optional[str]
-    court_name: Optional[str] = None
-    court_url: Optional[str] = None
+    reviewed_by: str | None
+    reviewed_at: datetime | None
+    resolution_notes: str | None
+    court_name: str | None = None
+    court_url: str | None = None
 
     model_config = {"from_attributes": True}
 
@@ -153,7 +151,7 @@ class DashboardOut(BaseModel):
     changes_new: int
     changes_this_week: int
     error_count: int
-    last_scan_at: Optional[datetime]
+    last_scan_at: datetime | None
 
 
 # ---------------------------------------------------------------------------
@@ -165,7 +163,7 @@ class AlertConfigOut(BaseModel):
     id: int
     email_recipients: str
     notify_immediately: bool
-    notify_digest_time: Optional[str]
+    notify_digest_time: str | None
     min_priority: str
     ai_filter_enabled: bool
 
@@ -173,15 +171,15 @@ class AlertConfigOut(BaseModel):
 
 
 class AlertConfigUpdate(BaseModel):
-    email_recipients: Optional[str] = None
-    notify_immediately: Optional[bool] = None
-    notify_digest_time: Optional[str] = None
-    min_priority: Optional[str] = None
-    ai_filter_enabled: Optional[bool] = None
+    email_recipients: str | None = None
+    notify_immediately: bool | None = None
+    notify_digest_time: str | None = None
+    min_priority: str | None = None
+    ai_filter_enabled: bool | None = None
 
     @field_validator("min_priority")
     @classmethod
-    def validate_min_priority(cls, v: Optional[str]) -> Optional[str]:
+    def validate_min_priority(cls, v: str | None) -> str | None:
         if v is None:
             return v
         allowed = {"low", "medium", "high"}

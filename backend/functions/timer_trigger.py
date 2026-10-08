@@ -9,11 +9,10 @@ import logging
 
 import azure.functions as func
 from azure.storage.queue.aio import QueueClient as AsyncQueueClient
-from sqlalchemy import select
-
 from shared.config import config
 from shared.database import get_db_session
 from shared.models import Court
+from sqlalchemy import select
 
 logger = logging.getLogger(__name__)
 

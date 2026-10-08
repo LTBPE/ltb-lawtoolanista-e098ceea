@@ -3,12 +3,10 @@ Microsoft Graph API client for SharePoint list management and email notification
 """
 
 import logging
-from datetime import datetime, timezone
-from typing import Optional
+from datetime import timezone
 
 import httpx
 import msal
-
 from shared.config import config
 from shared.models import Change, Court
 
@@ -118,7 +116,7 @@ async def add_change_to_sharepoint(change: Change, court: Court) -> str:
 def _build_notification_html(
     change: Change,
     court: Court,
-    sharepoint_item_url: Optional[str] = None,
+    sharepoint_item_url: str | None = None,
 ) -> str:
     """Build the HTML body for a change notification email."""
     priority = (change.ai_priority or "medium").upper()
