@@ -11,14 +11,12 @@ from datetime import datetime, timezone
 
 import azure.functions as func
 from azure.storage.queue.aio import QueueClient as AsyncQueueClient
-from sqlalchemy import select
-
-from shared.config import config
-from shared.database import get_db_session
-from shared.models import Change, Court, ScanHistory
 from services import content_extractor, crawler, differ
 from services.blob_client import save_snapshot
 from services.crawler import CrawlError
+from shared.config import config
+from shared.database import get_db_session
+from shared.models import Change, Court, ScanHistory
 
 logger = logging.getLogger(__name__)
 

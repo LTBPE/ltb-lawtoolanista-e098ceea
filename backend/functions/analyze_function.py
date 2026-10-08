@@ -7,17 +7,15 @@ Message format: {"court_id": <int>, "change_id": <int>}
 
 import json
 import logging
-from datetime import datetime, timezone
 
 import azure.functions as func
-from sqlalchemy import select
-
-from shared.config import config
-from shared.database import get_db_session
-from shared.models import AlertConfig, Change, Court
 from services import ai_analyzer, differ
 from services.blob_client import load_snapshot
 from services.graph_client import add_change_to_sharepoint, send_change_notification
+from shared.config import config
+from shared.database import get_db_session
+from shared.models import AlertConfig, Change, Court
+from sqlalchemy import select
 
 logger = logging.getLogger(__name__)
 

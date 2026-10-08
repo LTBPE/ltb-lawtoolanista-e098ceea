@@ -7,7 +7,6 @@ Registers all blueprints (timer, crawl, analyze, management API).
 import logging
 
 import azure.functions as func
-
 from functions.analyze_function import bp as analyze_bp
 from functions.crawl_function import bp as crawl_bp
 from functions.management_api import bp as api_bp

@@ -6,7 +6,6 @@ import logging
 from datetime import datetime
 
 from azure.storage.blob.aio import BlobServiceClient
-
 from shared.config import config
 
 logger = logging.getLogger(__name__)
